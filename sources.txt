@@ -1,0 +1,9 @@
+https://en.wikipedia.org/wiki/Double_pendulum
+https://de.wikipedia.org/wiki/Doppelpendel
+https://de.wikipedia.org/wiki/Hamilton-Funktion
+https://en.wikipedia.org/wiki/Hamiltonian_function
+https://en.wikipedia.org/wiki/Symplectic_integrator
+https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods
+https://de.wikipedia.org/wiki/Runge-Kutta-Verfahren
+https://rotations.berkeley.edu/the-double-pendulum/
+https://www.myphysicslab.com/pendulum/double-pendulum-en.html
