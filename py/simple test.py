@@ -26,7 +26,7 @@ t_1_0, t_2_0 = np.pi/4., np.pi/2.
 v_1_0, v_2_0 = 0, 0
 
 delta_t = 1/30
-t_max = 10
+t_max = 5
 
 ### >>> END SETUP <<<
 
@@ -64,7 +64,7 @@ for i in range(1, len(t)):
 #print(t_2)
 
 
-
+"""
 fig = plt.figure()
 ax = plt.axes(xlim=(-(l_1+l_2), l_1+l_2), ylim=(-(l_1+l_2), l_1+l_2))
 line, = ax.plot([], [], lw=3)
@@ -87,4 +87,20 @@ anim = FuncAnimation(fig, animate, init_func=init,
 
 #anim.save('sine_wave.gif', writer='imagemagick')
 #anim.save('Pendulum_swing.mp4', fps=int(1/delta_t))
+plt.show()
+"""
+
+kin = np.zeros(len(t))
+pot = np.zeros(len(t))
+for i in range(len(t)):
+    kin[i] = .5*m_1*l_1**2*v_1[i]**2 + .5*m_2*(l_1**2*v_1[i]**2 + l_2**2*v_2[i]**2 + 2*v_1[i]*v_2[i]*l_1*l_2*np.cos(t_1[i] - t_2[i]))
+    pot[i] = -g*(m_1*l_1*np.cos(t_1[i]) + m_2*(l_1*np.cos(t_1[i]) + l_2*np.cos(t_2[i])))
+
+fig = plt.figure()
+
+plt.plot(t, kin, label="Kinetic")
+plt.plot(t, pot, label="Potentail")
+plt.plot(t, pot + kin, label="Total")
+
+plt.legend()
 plt.show()
