@@ -45,11 +45,11 @@ c_3 = - l_1/l_2
 c_4 = - g/l_2
 
 # do the integration
-
 for i in range(1, len(t)):
+    # naive variant
     dtheta = t_1[i-1] - t_2[i-1]
     a_1[i] = c_1 * (a_2[i-1] * np.cos(dtheta) + v_2[i-1]**2*np.sin(dtheta)) + c_2 * np.sin(t_1[i-1])
-    a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) + v_1[i-1]**2*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
+    a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) - v_1[i-1]**2*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
     v_1[i] = v_1[i-1] + delta_t * a_1[i]
     v_2[i] = v_2[i-1] + delta_t * a_2[i]
     t_1[i] = t_1[i-1] + delta_t * v_1[i]
