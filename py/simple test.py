@@ -4,7 +4,7 @@ import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 import scipy
 plt.style.use('seaborn-pastel')
-
+# TODO: Compare with analytical solution for simple pendulum
 ### >>> BEGIN SETUP <<<
 # mass
 m_1, m_2 = 1., 1.
@@ -14,15 +14,16 @@ l_1, l_2 = 1., 1.
 g = 9.81
 
 # inital angles
+#t_1_0, t_2_0 = np.pi/2,np.pi/2
 t_1_0, t_2_0 = 2*np.pi/3., -np.pi/18.
 # inital momentum
 v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
 delta_t = 0.001
-t_max = 30
+t_max = 300
 
-animate_pendulum = True
+animate_pendulum = False
 plot_energies = True
 verbose_mode = False
 
@@ -70,14 +71,21 @@ def G(i, u):
     v1 = u[2]
     v2 = u[3]
     dt = t1-t2
-    a_1[int(i)] = c_1 * (a_2[int(i-1)] * np.cos(dt) + v2*v2*np.sin(dt)) + c_2 * np.sin(t1)
-    a_2[int(i)] = c_3 * (a_1[int(i-1)] * np.cos(dt) - v1*v1*np.sin(dt)) + c_4 * np.sin(t2)
-    return np.array([v1,v2,a_1[int(i)],a_2[int(i)]])
+    alpha = c_1 * np.cos(dt)
+    beta = c_1 * v2**2*np.sin(dt) + c_2*np.sin(t1)
+    gamma = c_3 * np.cos(dt)
+    delta = - c_3 * v1**2*np.sin(dt) + c_4*np.sin(t2)
+    a1 = (alpha*delta + beta) / (1 - alpha * gamma)
+    a2 = a1 * gamma + delta
+    #a_1[int(i)] = c_1 * (a_2[int(i-1)] * np.cos(dt) + v2*v2*np.sin(dt)) + c_2 * np.sin(t1)
+    #a_2[int(i)] = c_3 * (a_1[int(i-1)] * np.cos(dt) - v1*v1*np.sin(dt)) + c_4 * np.sin(t2)
+    #return np.array([v1,v2,a_1[int(i)],a_2[int(i)]])
+    return np.array([v1, v2, a1, a2])
 
 # do the integration
 print("Start time integration")
-for i in range(1, len(t)):
-    if simulation_mode == 0: # Forward Euler
+if simulation_mode == 0: # Forward Euler
+    for i in range(1, len(t)):
         dtheta = t_1[i-1] - t_2[i-1]
         a_1[i] = c_1 * (a_2[i-1] * np.cos(dtheta) + v_2[i-1]*v_2[i-1]*np.sin(dtheta)) + c_2 * np.sin(t_1[i-1])
         a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) - v_1[i-1]*v_1[i-1]*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
@@ -85,7 +93,8 @@ for i in range(1, len(t)):
         v_2[i] = v_2[i-1] + delta_t * a_2[i]
         t_1[i] = t_1[i-1] + delta_t * v_1[i]
         t_2[i] = t_2[i-1] + delta_t * v_2[i]
-    elif simulation_mode == 1: # RK4
+elif simulation_mode == 1: # RK4
+    for i in range(1, len(t)):
         u = np.array([t_1[i-1], t_2[i-1], v_1[i-1], v_2[i-1]])
         u += delta_t * phi(int(i), u, delta_t, G)
         t_1[i], t_2[i], v_1[i], v_2[i] = u[0], u[1], u[2], u[3]
@@ -119,10 +128,10 @@ if animate_pendulum:
         x = [0, x_1[i], x_2[i]]
         y = [0, y_1[i], y_2[i]]
         line.set_data(x, y)
-        time_text.set_text(time_template % (i*delta_t))
+        time_text.set_text(time_template % (i * delta_t))
         return line,time_text
     
-    anim = FuncAnimation(fig, animate, init_func=init,frames=int(t_max/delta_t), interval=delta_t * 1000, blit=True)
+    anim = FuncAnimation(fig, animate, init_func=init,frames=np.arange(0, int(t_max/delta_t), int(0.03/delta_t)), interval= 30, blit = True)
     #anim.save('sine_wave.gif', writer='imagemagick')
     #anim.save("Pendulum_swing.mp4", fps=int(1/delta_t))
     plt.show()
