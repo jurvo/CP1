@@ -29,6 +29,8 @@ verbose = True
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
+
+fps = 30
 ### >>> END SETUP <<<
 
 if verbose:
@@ -44,7 +46,8 @@ if verbose:
 
 # delcare and initilize arrays
 t = np.arange(0, t_max, delta_t)
-t_1, t_2, v_1, v_2, a_1, a_2 = np.zeros(len(t)), np.zeros(len(t)), np.zeros(len(t)), np.zeros(len(t)), np.zeros(len(t)), np.zeros(len(t)) # create data arrays
+n = len(t)
+t_1, t_2, v_1, v_2, a_1, a_2 = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n) # create data arrays
 
 # assing initial values
 t_1[0], t_2[0] = t_1_0, t_2_0
@@ -60,9 +63,9 @@ c_4 = - g/l_2
 # a RK4 method
 def phi(u, h ,f):
     k_1 = f(u)
-    k_2 = f(.5 * u * h * k_1)
-    k_3 = f(.5 * u * h * k_2)
-    k_4 = f(u * h * k_3)
+    k_2 = f(u + .5 * h * k_1)
+    k_3 = f(u + .5 * h * k_2)
+    k_4 = f(u + h * k_3)
     return (k_1 + 2. * (k_2 + k_3) + k_4) / 6.
 
 def G(u):
@@ -82,7 +85,7 @@ def G(u):
 # do the integration
 if verbose: print("Start time integration")
 if simulation_mode == 0: # Forward Euler
-    for i in range(1, len(t)):
+    for i in range(1, n):
         dtheta = t_1[i-1] - t_2[i-1]
         a_1[i] = c_1 * (a_2[i-1] * np.cos(dtheta) + v_2[i-1]*v_2[i-1]*np.sin(dtheta)) + c_2 * np.sin(t_1[i-1])
         a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) - v_1[i-1]*v_1[i-1]*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
@@ -91,7 +94,7 @@ if simulation_mode == 0: # Forward Euler
         t_1[i] = t_1[i-1] + delta_t * v_1[i]
         t_2[i] = t_2[i-1] + delta_t * v_2[i]
 elif simulation_mode == 1: # RK4
-    for i in range(1, len(t)):
+    for i in range(1, n):
         p = delta_t * phi(np.array([t_1[i-1], t_2[i-1], v_1[i-1], v_2[i-1]]), delta_t, G)
         t_1[i] = t_1[i-1] + p[0]
         t_2[i] = t_2[i-1] + p[1]
@@ -128,10 +131,10 @@ if animate_pendulum:
         x = [0, x_1[i], x_2[i]]
         y = [0, y_1[i], y_2[i]]
         line.set_data(x, y)
-        time_text.set_text(time_template % (i * delta_t))
+        time_text.set_text(time_template % (t[i]))
         return line,time_text
     
-    anim = FuncAnimation(fig, animate, init_func=init,frames=np.arange(0, int(t_max/delta_t), int(0.03/delta_t)), interval= 30, blit = True)
+    anim = FuncAnimation(fig, animate, init_func=init,frames=np.arange(0, n, max(int(1/fps/delta_t),1)), interval=1000/fps, blit = True)
     #anim.save('sine_wave.gif', writer='imagemagick')
     #anim.save("Pendulum_swing.mp4", fps=int(1/delta_t))
     plt.show()
