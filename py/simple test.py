@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.animation import FuncAnimation
 from scipy.integrate import RK45
 
 
@@ -125,7 +126,7 @@ print('Method: Leapfrog DE=' , max(E)- min(E))
 phi_contour, p_contour = np.meshgrid(np.linspace(-1.5*np.pi, 1.5*np.pi, 100), \
                                       np.linspace(-2.5, 2.5, 50))  
 
-h = hamiltonian(phi_contour, p_contour)
+'''h = hamiltonian(phi_contour, p_contour)
 
 fig = plt.figure(constrained_layout=False)
 fig.set_size_inches(9, 6)#(18.5, 9.0)
@@ -175,4 +176,45 @@ ani = animation.FuncAnimation(
     fig, animate, len(hist_y), interval=dt*1000, blit=True)
 
 # ani.save('Pendulum_swing.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+plt.show()'''
+
+E_kin = .5*l**2*p_1**2 + .5*(l**2*p_1**2 + l**2*p_2**2 + 2*p_1*p_2*l*l*np.cos(phi_1 - phi_2))
+E_pot = -g*(m*l*np.cos(phi_1) + m*(l*np.cos(phi_1) + l*np.cos(phi_2)))
+E_tot = E_kin + E_pot
+
+print("Calculations done.")
+print("Start plotting.")
+
+# plot the pendulum
+fig = plt.figure(figsize=(8,8))
+ax = plt.axes(xlim=(-(l+l), l+l), ylim=(-(l+l), l+l))
+line, = ax.plot([], [], 'o-',lw=2)
+time_template = 'time = %.2fs'
+time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+
+def init():
+    line.set_data([], [])
+    return line,
+def animate(i):
+    x = [0, x_1[i], x_2[i]]
+    y = [0, y_1[i], y_2[i]]
+    line.set_data(x, y)
+    time_text.set_text(time_template % (t[i]))
+    return line,time_text
+    
+    anim = FuncAnimation(fig, animate, init_func=init,frames=np.arange(0, n, max(int(1/fps/dt),1)), interval=1000/fps, blit = True)
+    #anim.save('sine_wave.gif', writer='imagemagick')
+    #anim.save("Pendulum_swing.mp4", fps=int(1/delta_t))
+    plt.show()
+
+# plot the energies
+
+fig = plt.figure()
+plt.plot(t, E_kin, label="Kinetic")
+plt.plot(t, E_pot, label="Potentail")
+plt.plot(t, E_tot, label="Total")
+
+plt.ylim([-50,200])
+plt.legend()
 plt.show()
+print("Plotting done.")
