@@ -7,25 +7,28 @@ plt.style.use('seaborn-pastel')
 # TODO: Compare with analytical solution for simple pendulum
 ### >>> BEGIN SETUP <<<
 # mass
-m_1, m_2 = 1, 1.
+m_1, m_2 = 1., 01.
 # length of the pendulums
 l_1, l_2 = 1., 1.
 # gravity const
 g = 9.81
 
 # inital angles
-t_1_0, t_2_0 = np.pi/2,np.pi/2
+t_1_0, t_2_0 = np.pi/2 , np.pi/2
 #t_1_0, t_2_0 = 2*np.pi/3., -np.pi/18.
 # inital momentum
 v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
 delta_t = 0.001
-t_max = 100
+t_max = 50
 
 animate_pendulum = True
 plot_energies = True
 verbose = True
+plot_phasespace = True
+plot_phasespacekorr = False
+flipcounter = True
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
@@ -57,12 +60,16 @@ c_2 = - g/l_1
 c_3 = - l_1/l_2
 c_4 = - g/l_2
 
+# Additional values
+flips_1 = 0.
+flips_2 = 0.
+
 # a RK4 method
 def phi(u, h ,f):
     k_1 = f(u)
-    k_2 = f(.5 * u * h * k_1)
-    k_3 = f(.5 * u * h * k_2)
-    k_4 = f(u * h * k_3)
+    k_2 = f(u + .5 * h * k_1)
+    k_3 = f(u + .5 * h * k_2)
+    k_4 = f(u + h * k_3)
     return (k_1 + 2. * (k_2 + k_3) + k_4) / 6.
 
 def G(u):
@@ -148,3 +155,49 @@ if plot_energies:
     plt.legend()
     plt.show()
 if verbose: print("Plotting done.")
+# Plot in phase space
+if flipcounter:
+    flips_1 = ((t_1+np.pi)//(2*np.pi))
+    flips_2 = ((t_2+np.pi)//(2*np.pi))
+    
+    
+if plot_phasespace:
+    fig = plt.figure()
+    
+    tkorr_1 = t_1 - flips_1 * 2 * np.pi
+    tkorr_2 = t_2 - flips_2 * 2 * np.pi
+    
+    if plot_phasespacekorr:
+        plt.plot(tkorr_1, v_1, label="Pendulum 1 corrected")
+        plt.plot(tkorr_2, v_2, label="Pendulum 2 corrected")
+    else:
+        plt.plot(t_1, v_1, label="Pendulum 1")
+        plt.plot(t_2, v_2, label="Pendulum 2")        
+    
+    plt.plot(t_1, flips_1, label="Flips Pendulum 1")
+    plt.plot(t_2, flips_2, label="Flips Pendulum 2")
+    plt.legend()
+    plt.show()
+    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
