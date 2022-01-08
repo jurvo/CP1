@@ -7,11 +7,11 @@ from scipy.integrate import RK45
 
 
 'Hamiltonian of the pendulum system'
-def hamiltonian(phi, p):
+def hamiltonian(phi_1, phi_2, p_1, p_2):
     return 1/(2*m*l**2)*(p_1**2+p_2**2-2*p_1*p_2*np.cos(phi_1-phi_2)/(1+(np.sin(phi_1-phi_2))**2) +m*g*l*(3-2*np.cos(phi_1)-np.cos(phi_2)))
 
 'X & Y coordinate of the pendulum'
-def beam(phi):
+def beam(phi_1, phi_2):
     x_1 = l*np.sin(phi_1)
     y_1 = -l*np.cos(phi_1)
     x_2 = l*np.sin(phi_1)+l*np.sin(phi_2)
@@ -91,17 +91,16 @@ for iters in range(n_step):
     if (phi_2 > 4): phi_2 = phi_2 - 2.0*np.pi
     if (phi_2 < -4): phi_2 = phi_2 + 2.0*np.pi
 
-    x_1, y_1 = beam(phi_1)
-    x_2, y_2 = beam(phi_2)
+    x_1, y_1, x_2, y_2 = beam(phi_1, phi_2)
 
-    hist_x_1.append(x_1)
-    hist_y_1.append(y_1)
-    hist_phi_1.append(phi_1)
-    hist_p_1.append(p_1)
-    hist_x_2.append(x_2)
-    hist_y_2.append(y_2)
-    hist_phi_2.append(phi_2)
-    hist_p_2.append(p_2)
+#    hist_x_1.append(x_1)
+#    hist_y_1.append(y_1)
+#    hist_phi_1.append(phi_1)
+#    hist_p_1.append(p_1)
+#    hist_x_2.append(x_2)
+#    hist_y_2.append(y_2)
+#    hist_phi_2.append(phi_2)
+#    hist_p_2.append(p_2)
 
 
 ## the spatial coordinate calculated in leapfrog is advanced of
@@ -117,10 +116,10 @@ phi_v_2[0]= phi_2_0
     
     
 "calculate energy"
-E= hamiltonian(phi_v_1, p_v_1, phi_v_2, p_v_2)
+#E= hamiltonian(phi_v_1, p_v_1, phi_v_2, p_v_2)
 
 
-print('Method: Leapfrog DE=' , max(E)- min(E))
+#print('Method: Leapfrog DE=' , max(E)- min(E))
 
 "Plotting related codes: "
 "Phi & p phase space contour"
