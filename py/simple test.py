@@ -36,7 +36,7 @@ verbose = True
 plot_phasespace = True
 plot_phasespacekorr = False
 flipcounter = True
-calculate_fractal = True #RK4 only, switches to RK4 automatically.
+calculate_fractal = False #RK4 only, switches to RK4 automatically.
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
@@ -64,6 +64,7 @@ t_1, t_2, v_1, v_2, a_1, a_2 = np.zeros(len(t)), np.zeros(len(t)), np.zeros(len(
 if calculate_fractal:
     simulation_mode = 1
     fractal = []
+    logfractal = []
     for l in range(1, len(t_2_init)):
         fractal_row = []
         breakvalue = t_max
@@ -136,7 +137,12 @@ if calculate_fractal:
                 fractal_row.append(breakvalue)
         print(fractal_row)
         fractal.append(fractal_row)
-    print(fractal)
+    for i in range(1, len(fractal)):
+        logfractal_row = []
+        for j in range(0, len(fractal[i])):
+            log = np.log10(fractal[i][j])
+            logfractal_row.append(log)
+        logfractal.append(logfractal_row)
     
     #Plot as colour-coded field of squares
     
