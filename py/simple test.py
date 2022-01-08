@@ -62,10 +62,10 @@ hist_p_2 = []
 
 for iters in range(n_step):     
 
-    p_1_new = p_1 + (-np.sin(phi_1))*dt
-    phi_1_new = phi_1 + dt*p_1_new
-    p_2_new = p_2 + (-np.sin(phi_2))*dt
-    phi_2_new = phi_2 + dt*p_2_new
+    p_1_new = p_1 + dt/(m*l*(1+(np.sin(phi_1-phi_2))**2))*(p_1-2*p_2*np.cos(phi_1-phi_2))
+    p_2_new = p_2 + dt/(m*l*(1+(np.sin(phi_1-phi_2))**2))*(p_2-2*p_1*np.cos(phi_1-phi_2))
+    phi_1_new = phi_1 + dt/(2*m*l)*((2*p_1_new*p_2_new*np.sin(phi_1-phi_2))*(1+(np.sin(phi_1-phi_2))**2)-2*np.sin(phi_1-phi_2)*np.cos(phi_1-phi_2)*(p_1_new**2+p_2_new**2-2*p_1_new*p_2_new*np.cos(phi_1-phi_2)))/((1+(np.sin(phi_1-phi_2))**2)**2)+2*m*g*l*np.sin(phi_1)
+    phi_2_new = phi_2 + dt/(2*m*l)*((-2*p_1_new*p_2_new*np.sin(phi_1-phi_2))*(1+(np.sin(phi_1-phi_2))**2)+2*np.sin(phi_1-phi_2)*np.cos(phi_1-phi_2)*(p_1_new**2+p_2_new**2-2*p_1_new*p_2_new*np.cos(phi_1-phi_2)))/((1+(np.sin(phi_1-phi_2))**2)**2)+m*g*l*np.sin(phi_2)
   
 
     "Update the phi & p values"   
