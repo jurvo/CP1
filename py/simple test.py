@@ -15,20 +15,20 @@ g = 9.81
 
 # inital angles
 t_1_0, t_2_0 =  np.pi/4 , - np.pi/4
-#t_1_0, t_2_0 = 2*np.pi/3., -np.pi/18.
+#t_1_0, t_2_0 = np.pi/4, 0
 
 # initial value array values
 initmin = -( np.pi - 0.01) # -0.01 to avoid stable state in upright position 
 initmax = (np.pi -0.01)
-initres = 10 # resolution of measured points, for square array only
-#border_of_exacticity = 0.1
+initres = 50 # resolution of measured points, for square array only
+border_of_exacticity = 2 # threshold value, to avoid time consuming computation of "impossible" values. Set to 2 for acceptable results, little bit higher saves time but destroys exacticity.
 
 # inital momentum
 v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
 delta_t = 0.001
-t_max = 10
+t_max = 50
 
 animate_pendulum = True
 plot_energies = True
@@ -74,10 +74,10 @@ if calculate_fractal:
             v_1[0], v_2[0] = v_1_0, v_2_0
             a_1[0], a_2[0] = 0., 0.
             
-            #if (3*np.cos(t_1[0])+np.cos(t_2[0])) > border_of_exacticity:
-            #    fractal_row.append(breakvalue_rescure)
-            #else:
-            if True:           
+            if (3*np.cos(t_1[0])+np.cos(t_2[0])) > border_of_exacticity:
+                fractal_row.append(breakvalue_rescure) # ca. 13 min mit Zeitsparer. Nach 14 min ohne Zeisparer bei l=36...
+            else:
+           # if True:           
                 # calculating the constants
                 c_1 = - m_2/(m_1+m_2) * l_2/l_1
                 c_2 = - g/l_1
