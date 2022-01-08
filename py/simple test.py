@@ -26,6 +26,7 @@ t_end = 20
 n_step = int(t_end/dt)
 
 "Initial Conditions"
+fps=30
 m=1
 l=1
 g=9.81
@@ -36,7 +37,7 @@ p_2_0=0
 
 "Initial time and energy"
 t = np.zeros(1)
-
+n=len(t)
 
 "Initial condition for Leapfrog algorithm"
 # needs spatial coordinate info at time 1/2
@@ -91,7 +92,7 @@ for iters in range(n_step):
     if (phi_2 < -4): phi_2 = phi_2 + 2.0*np.pi
 
     x_1, y_1 = beam(phi_1)
-    x_2, y_2 = beam(phi_1)
+    x_2, y_2 = beam(phi_2)
 
     hist_x_1.append(x_1)
     hist_y_1.append(y_1)
