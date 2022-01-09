@@ -7,10 +7,10 @@ def kinetic(q1, q2, p1, p2):
     return 1/(2*m*l) * (p1**2+p2**2-2*p1*p2*np.cos(q1-q2))/(1+(np.sin(q1-q2))**2)
 
 def potential(q1,q2):
-    return m*g*l*(3-2*np.sin(q1)-np.sin(q2))
+    return m*g*l*(3-2*np.cos(q1)-np.cos(q2))
 
 def Etot(q1, q2, p1, p2):
-    return kinetic(q1, q2, p1, p2)+potential(q1, q2)
+    return kinetic(q1, q2, p1, p2) + potential(q1, q2)
 
 'Initial Conditions'
 
