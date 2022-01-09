@@ -127,4 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-Pendulum_swing.mp4
+
+# Custom filter
+*.mp4
+data/
