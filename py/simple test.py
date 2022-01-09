@@ -18,9 +18,9 @@ t_1_0, t_2_0 =  np.pi/4 , - np.pi/4
 #t_1_0, t_2_0 = np.pi/4, 0
 
 # initial value array values
-initmin = -( np.pi - 0.01) # -0.01 to avoid stable state in upright position 
+initmin = -(np.pi -0.01) # -0.01 to avoid stable state in upright position 
 initmax = (np.pi -0.01)
-initres = 50 # resolution of measured points, for square array only
+initres = 10 # resolution of measured points, for square array only
 border_of_exacticity = 2 # threshold value, to avoid time consuming computation of "impossible" values. Set to 2 for acceptable results, little bit higher saves time but destroys exacticity.
 
 # inital momentum
@@ -28,15 +28,15 @@ v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
 delta_t = 0.001
-t_max = 50
+t_max = 10
 
-animate_pendulum = True
-plot_energies = True
+animate_pendulum = False
+plot_energies = False
 verbose = True
-plot_phasespace = True
+plot_phasespace = False
 plot_phasespacekorr = False
-flipcounter = True
-calculate_fractal = False #RK4 only, switches to RK4 automatically.
+flipcounter = False
+calculate_fractal = True #RK4 only, switches to RK4 automatically.
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
@@ -148,6 +148,8 @@ if calculate_fractal:
     
     fig = plt.figure()
     plt.pcolormesh(fractal)
+    plt.xlabel(("m, l=", initres , "res=", t_max))
+    #plt.tight_layout()
     plt.show()
     
         
