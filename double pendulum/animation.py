@@ -8,7 +8,7 @@ plt.style.use('seaborn-pastel')
 
 ### >>> BEGIN SETUP <<<
 
-file = "default.txt"
+file = "leapfrog_test.txt"
 fps = 30
 verbose = True
 animate_pendulum = True
