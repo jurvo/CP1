@@ -14,7 +14,7 @@ l_1, l_2 = 1., 1.
 g = 9.81
 
 # inital angles
-t_1_0, t_2_0 =  np.pi/4 , - np.pi/4
+t_1_0, t_2_0 =  np.pi/2 , - np.pi/2
 #t_1_0, t_2_0 = 2*np.pi/3., -np.pi/18.
 #t_1_0, t_2_0 = np.pi/4, 0
 
@@ -32,13 +32,13 @@ v_1_0, v_2_0 = 0.0, 0.0
 delta_t = 0.001
 t_max = 100
 
-animate_pendulum = True
+animate_pendulum = False
 plot_energies = True
 verbose = True
 plot_phasespace = True
-plot_phasespacekorr = False
+plot_phasespacekorr = True
 flipcounter = True
-calculate_fractal = True #RK4 only, switches to RK4 automatically.
+calculate_fractal = False #RK4 only, switches to RK4 automatically.
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
 ### >>> END SETUP <<<
