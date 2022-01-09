@@ -96,5 +96,5 @@ elif simulation_mode == 1: # RK4
 if verbose:
 	print("Time integration done.")
 	print("Saving...")
-saveDataToFile(".\\double pendulum\\data\\1.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
+saveDataToFile("default.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 if verbose: print("Saving done!")
