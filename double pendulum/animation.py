@@ -8,16 +8,18 @@ plt.style.use('seaborn-pastel')
 
 ### >>> BEGIN SETUP <<<
 
-file = "default.txt"
+file0 = "default0.txt"
+file1 = "default1.txt"
 fps = 30
 verbose = True
 animate_pendulum = True
 plot_energies = True
+comparison_mode = True
 
 ### >>> END SETUP <<<
 
 # load data and assign them
-settings, data = functions.loadDataFromFile(file)
+settings, data = functions.loadDataFromFile(file0)
 m1, m2, l1, l2, g, t_max, dt, sim_mode = settings["m1"], settings["m2"], settings["l1"], settings["l2"], settings["g"], settings["tmax"], settings["dt"], settings["sim"]
 t, q1, q2, p1, p2 = data["t"], data["q1"], data["q2"], data["p1"], data["p2"]
 n = len(t)
