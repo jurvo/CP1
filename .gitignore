@@ -130,6 +130,7 @@ dmypy.json
 
 # Custom filter
 *.mp4
+*.npy
 data/
 CP-Projekt/
 CP-Projekt_vomHolz/
