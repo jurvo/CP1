@@ -128,6 +128,7 @@ def calculate_fractal(t_max, initmin, initmax, verbose, valueprint):
         # fractal_row = [] #initialisation of all rows of the fractal map, means looping over t_2 values, one value per row.
         # breakvalue = t_max # it is better to leave this on max, to avoid errors if calculation breaks
         for m in range(len(t_1_init)): #initialisation of the row's value loop, loop over t_1 values with const t_2
+            
             breakvalue = fliptime(t_max, t_1_init[m], t_2_init[l], m, l, verbose, valueprint)
             fractal[l, m] = breakvalue # fractal_row.append(breakvalue) # appending breakvalue to row 
     return fractal
@@ -143,17 +144,30 @@ def calculate_fractal(t_max, initmin, initmax, verbose, valueprint):
 
 # calculating the constants, to be used later
 
+class Task:
+	def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.breakvalue = -1
+
+	def do_task(self):
+        breakvalue = fliptime(t_max, self.x, self.y, 0, 0, verbose, valueprint)
+		
+
+tasks = []
+for x in init:
+	for y in init:
+		tasks.append(t(x,y))
+
+if __name__ == '__main__':
+
+	pool = Pool()
+	pool.map(work, tasks)
+	pool.close()
+	pool.join()
 
 
 
-#pool = Pool()
-#quadrant1 = pool.apply_async(calculate_fractal, [t_max, 0, (np.pi -0.01), False, False])
-#quadrant2 = pool.apply_async(calculate_fractal, [t_max, (np.pi -0.01), 0 , False, False])
-#quadrant3 = pool.apply_async(calculate_fractal, [t_max, -(np.pi -0.01), (np.pi -0.01), False, False])
-#quadrant4 = pool.apply_async(calculate_fractal, [t_max, 0, -(np.pi -0.01), False, False])
-
-
-#Plot as colour-coded field of squares
 fractal= calculate_fractal(t_max, initmin, initmax, True, False)
 #fractal= calculate_fractal(10, -(np.pi -0.01), 0, True, False)
 logfractal = np.log(fractal)
