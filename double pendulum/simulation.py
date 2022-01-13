@@ -23,6 +23,7 @@ verbose = True
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
+filename = "default.txt"
 ### >>> END SETUP <<<
 
 if verbose:
@@ -96,5 +97,5 @@ elif simulation_mode == 1: # RK4
 if verbose:
 	print("Time integration done.")
 	print("Saving...")
-saveDataToFile("default.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
+saveDataToFile(filename, t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 if verbose: print("Saving done!")
