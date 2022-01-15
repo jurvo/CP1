@@ -8,80 +8,88 @@ plt.style.use('seaborn-pastel')
 
 ### >>> BEGIN SETUP <<<
 
-files = ["default.txt"]
+# EXACT 2 FILES ARE REQUIRED
+files = ["default.txt", "default_1.txt"]
 m = len(files)
 fps = 30
 verbose = True
 animate_pendulum = True
 
-plot_energies = True
+if m != 2:
+	print("Please specify two files!")
+	quit()
 
 ### >>> END SETUP <<<
-m1 = m2 = l1 = l2 = g = t_max = dt = sim_mode = m*[None]
-t = q1 = q2 = p1 = p2 = m*[None]
-x1 = x2 = y1 = y2 = m*[None]
-E_kin = E_pot = E_tot = m*[None]
+m1, m2, l1, l2, g, t_max, dt, sim_mode = [], [], [], [], [], [], [], []
+t, q1, q2, p1, p2 = [], [], [], [], []
+x1, x2, y1, y2 = [], [], [], []
+E_kin, E_pot, E_tot = [], [], []
 # load data and assign them
 for i in range(m):
+	if verbose: print("Load file ", str(i + 1), "of", str(m))
 	settings, data = functions.loadDataFromFile(files[i])
-	m1[i], m2[i], l1[i], l2[i], g[i], t_max[i], dt[i], sim_mode[i] = settings["m1"], settings["m2"], settings["l1"], settings["l2"], settings["g"], settings["tmax"], settings["dt"], settings["sim"]
-	t[i], q1[i], q2[i], p1[i], p2[i] = data["t"], data["q1"], data["q2"], data["p1"], data["p2"]
-	
-	# calculating the x, y, e_kin, e_pot, e_tot values
-	x1[i] = l1[i]*np.sin(q1[i])
-	x2[i] = x1[i] + l2[i]*np.sin(q2[i])
-	y1[i] = -l1[i]*np.cos(q1[i])
-	y2[i] = y1[i] - l2[i]*np.cos(q2[i])
+	m1.append(settings["m1"])
+	m2.append(settings["m2"])
+	l1.append(settings["l1"])
+	l2.append(settings["l2"])
+	g.append(settings["g"])
+	t_max.append(settings["tmax"])
+	dt.append(settings["dt"])
+	sim_mode.append(settings["sim"])
 
-	E_kin[i] = .5*m1[i]*l1[i]**2*p1[i]**2 + .5*m2[i]*(l1[i]**2*p1[i]**2 + l2[i]**2*p2[i]**2 + 2*p1[i]*p2[i]*l1[i]*l2[i]*np.cos(q1[i] - q2[i]))
-	E_pot[i] = -g[i]*(m1[i]*l1[i]*np.cos(q1[i]) + m2[i]*(l1[i]*np.cos(q1[i]) + l2[i]*np.cos(q2[i])))
-	E_tot[i] = E_kin[i] + E_pot[i]
+	t.append(data["t"])
+	q1.append(data["q1"])
+	q2.append(data["q2"])
+	p1.append(data["p1"])
+	p2.append(data["p2"])
+
+	# calculating the x, y, e_kin, e_pot, e_tot values
+	x1.append(l1[i]*np.sin(q1[i]))
+	x2.append(x1[i] + l2[i]*np.sin(q2[i]))
+	y1.append(-l1[i]*np.cos(q1[i]))
+	y2.append(y1[i] - l2[i]*np.cos(q2[i]))
+
+	E_kin.append(.5*m1[i]*l1[i]**2*p1[i]**2 + .5*m2[i]*(l1[i]**2*p1[i]**2 + l2[i]**2*p2[i]**2 + 2*p1[i]*p2[i]*l1[i]*l2[i]*np.cos(q1[i] - q2[i])))
+	E_pot.append(-g[i]*(m1[i]*l1[i]*np.cos(q1[i]) + m2[i]*(l1[i]*np.cos(q1[i]) + l2[i]*np.cos(q2[i]))))
+	E_tot.append(E_kin[i] + E_pot[i])
 
 n = len(t[0])
 
 if verbose:
-	print("Calculations done.")
-	print("Start plotting.")
+	print("Loading complete.")
+	print("Start animation.")
 
 # plot the pendulum
 if animate_pendulum:
 	fig = plt.figure(figsize=(8,8))
-	ax = plt.axes(xlim=(-(l1[0]+l2[0]), l1[0]+l2[0]), ylim=(-(l1[0]+l2[0]), l1[0]+l2[0]))
-	line = m*[None]
-	for	i in range(m):
-		line[i], = ax.plot([], [], 'o-',lw=2)
+	l = []
+	for i in range(m):
+		l.append(l1[i] + l2[i])
+	L = max(l)
+	ax = fig.add_subplot(autoscale_on=False, xlim=(-L, L), ylim=(-L, L))
+	ax.set_aspect('equal')
+	
+	line1, = ax.plot([], [], 'o-', lw=2, color = "red")
+	line2, = ax.plot([], [], 'o-', lw=2, color = "blue")
+
 	time_template = 'time = %.2fs'
 	time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
+
 	def init():
-		for	i in range(m):
-			line[i].set_data([], [])
-		return line,
+		line1.set_data([], [])
+		line2.set_data([], [])
+		time_text.set_text(time_template % (0))
+		return line1, line2, time_text
 
 	def animate(i):
-		for	j in range(m):
-			x = [0, x1[j][i], x2[j][i]]
-			y = [0, y1[j][i], y2[j][i]]
-			line[j].set_data(x, y)
+		line1.set_data([0, x1[0][i], x2[0][i]], [0, y1[0][i], y2[0][i]])
+		line2.set_data([0, x1[1][i], x2[1][i]], [0, y1[1][i], y2[1][i]])
 		time_text.set_text(time_template % (t[0][i]))
-		return line,time_text
+		return line1, line2, time_text
 	
-	anim = FuncAnimation(fig, animate, init_func=init,frames=np.arange(0, n, max(int(1/fps/dt[0]),1)), interval=1000/fps, blit = True)
-	#anim.save('sine_wave.gif', writer='imagemagick')
-	#anim.save("Pendulum_swing.mp4", fps=int(1/delta_t))
-	# SUBPLOTS!!!
+	anim = FuncAnimation(fig, animate, init_func=init, frames=np.arange(0, n, max(int(1/fps/dt[0]),1)), interval=1000/fps, blit = True)
+	#if verbose: print("Start video rendering.")
+	#anim.save("compare.mp4", fps=fps)
+	#if verbose: print("Video rendering finished.")
 	plt.show()
-"""
-# plot the energies
-if plot_energies:
-	fig = plt.figure()
-
-	plt.plot(t, E_kin, label="Kinetic")
-	plt.plot(t, E_pot, label="Potentail")
-	plt.plot(t, E_tot, label="Total")
-
-	plt.ylim([-50,200])
-	plt.legend()
-	plt.show()
-if verbose: print("Plotting done.")
-"""

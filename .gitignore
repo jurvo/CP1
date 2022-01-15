@@ -130,4 +130,5 @@ dmypy.json
 
 # Custom filter
 *.mp4
+*.npy
 data/
