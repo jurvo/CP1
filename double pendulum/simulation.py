@@ -16,8 +16,8 @@ t_1_0, t_2_0 = np.pi/2,np.pi/2
 v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
-delta_t = 0.001
-t_max = 100
+delta_t = 0.1
+t_max = 10000000
 
 verbose = True
 
@@ -77,24 +77,29 @@ def G(u):
 # do the integration
 if verbose: print("Start time integration")
 if simulation_mode == 0: # Forward Euler
-	for i in range(1, n):
-		dtheta = t_1[i-1] - t_2[i-1]
-		a_1[i] = c_1 * (a_2[i-1] * np.cos(dtheta) + v_2[i-1]*v_2[i-1]*np.sin(dtheta)) + c_2 * np.sin(t_1[i-1])
-		a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) - v_1[i-1]*v_1[i-1]*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
-		v_1[i] = v_1[i-1] + delta_t * a_1[i]
-		v_2[i] = v_2[i-1] + delta_t * a_2[i]
-		t_1[i] = t_1[i-1] + delta_t * v_1[i]
-		t_2[i] = t_2[i-1] + delta_t * v_2[i]
+    for i in range(1, n):
+        dtheta = t_1[i-1] - t_2[i-1]
+        a_1[i] = c_1 * (a_2[i-1] * np.cos(dtheta) + v_2[i-1]*v_2[i-1]*np.sin(dtheta)) + c_2 * np.sin(t_1[i-1])
+        a_2[i] = c_3 * (a_1[i-1] * np.cos(dtheta) - v_1[i-1]*v_1[i-1]*np.sin(dtheta)) + c_4 * np.sin(t_2[i-1])
+        v_1[i] = v_1[i-1] + delta_t * a_1[i]
+        v_2[i] = v_2[i-1] + delta_t * a_2[i]
+        t_1[i] = t_1[i-1] + delta_t * v_1[i]
+        t_2[i] = t_2[i-1] + delta_t * v_2[i]
+        if i%100000==0:
+            print("Time integration:", i/n*100,"%")
+        
 elif simulation_mode == 1: # RK4
-	for i in range(1, n):
-		p = delta_t * phi(np.array([t_1[i-1], t_2[i-1], v_1[i-1], v_2[i-1]]), delta_t, G)
-		t_1[i] = t_1[i-1] + p[0]
-		t_2[i] = t_2[i-1] + p[1]
-		v_1[i] = v_1[i-1] + p[2]
-		v_2[i] = v_2[i-1] + p[3]
+    for i in range(1, n):
+        p = delta_t * phi(np.array([t_1[i-1], t_2[i-1], v_1[i-1], v_2[i-1]]), delta_t, G)
+        t_1[i] = t_1[i-1] + p[0]
+        t_2[i] = t_2[i-1] + p[1]
+        v_1[i] = v_1[i-1] + p[2]
+        v_2[i] = v_2[i-1] + p[3]
+        if i%100000==0:
+            print("Time integration:", i/n*100,"%")
 
 if verbose:
 	print("Time integration done.")
 	print("Saving...")
-saveDataToFile("default.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
+saveDataToFile("RK4_dt.1_tmax10000000.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 if verbose: print("Saving done!")

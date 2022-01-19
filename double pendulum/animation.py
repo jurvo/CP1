@@ -8,10 +8,10 @@ plt.style.use('seaborn-pastel')
 
 ### >>> BEGIN SETUP <<<
 
-file = "default.txt"
+file = "RK4_dt.1_tmax10000000.txt"
 fps = 30
 verbose = True
-animate_pendulum = True
+animate_pendulum = False
 plot_energies = True
 
 ### >>> END SETUP <<<
@@ -63,10 +63,18 @@ if plot_energies:
     fig = plt.figure()
 
     plt.plot(t, E_kin, label="Kinetic")
-    plt.plot(t, E_pot, label="Potentail")
+    plt.plot(t, E_pot, label="Potential")
     plt.plot(t, E_tot, label="Total")
 
     plt.ylim([-50,200])
     plt.legend()
+    plt.title(file)
+    #plt.text(0, 175, 'delta_t=')
+    #plt.text(15, 175, dt)
+    #plt.text(0, 160, 't_max=')
+    #plt.text(15, 160, t_max)
+    print("Saving...")
+    plt.savefig('RK4_dt.1_tmax10000000.png')
+    print("Saving done!")
     plt.show()
 if verbose: print("Plotting done.")

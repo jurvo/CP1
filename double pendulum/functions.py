@@ -1,6 +1,6 @@
 import numpy as np
 
-DATAPATH = ".\\double pendulum\\data\\"
+DATAPATH = ".\\data\\"
 TAB = "\t"
 
 def saveDataToFile(filename, time, angle_1, angle_2, momentum_1, momentum_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, sim_mode):
