@@ -16,13 +16,13 @@ t_1_0, t_2_0 = np.pi/2,np.pi/2
 v_1_0, v_2_0 = 0.0, 0.0
 
 # in seconds
-delta_t = 0.1
-t_max = 10000000
+delta_t = 0.01
+t_max = 1000
 
 verbose = True
 
 # 0 = Forward Euler, 1 = RK4
-simulation_mode = 1
+simulation_mode = 0
 ### >>> END SETUP <<<
 
 if verbose:
@@ -74,6 +74,7 @@ def G(u):
 	a2 = a1 * gamma + delta
 	return np.array([v1, v2, a1, a2])
 
+t_break = n
 # do the integration
 if verbose: print("Start time integration")
 if simulation_mode == 0: # Forward Euler
@@ -85,6 +86,9 @@ if simulation_mode == 0: # Forward Euler
         v_2[i] = v_2[i-1] + delta_t * a_2[i]
         t_1[i] = t_1[i-1] + delta_t * v_1[i]
         t_2[i] = t_2[i-1] + delta_t * v_2[i]
+        if not(np.isfinite(v_1[i]) and np.isfinite(v_2[i]) and np.isfinite(t_1[i]) and np.isfinite(t_2[i])):
+            t_break = i + 1
+            break
         if i%100000==0:
             print("Time integration:", i/n*100,"%")
         
@@ -101,5 +105,5 @@ elif simulation_mode == 1: # RK4
 if verbose:
 	print("Time integration done.")
 	print("Saving...")
-saveDataToFile("RK4_dt.1_tmax10000000.txt", t, t_1, t_2, v_1, v_2, m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
+saveDataToFile("FE_test.txt", t[:t_break], t_1[:t_break], t_2[:t_break], v_1[:t_break], v_2[:t_break], m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 if verbose: print("Saving done!")
