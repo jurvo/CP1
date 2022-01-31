@@ -20,10 +20,10 @@ t_1_0, t_2_0 =  np.pi/4 , - np.pi/4
 #t_1_0, t_2_0 = np.pi/4, 0
 
 # initial value array values
-initmin = -(np.pi -0.01) # -0.01 to avoid stable state in upright position 
+initmin = 0.0 # -0.01 to avoid stable state in upright position 
 initmax = (np.pi -0.01)
-initres = 40 # resolution of measured points, for square array only
-t_max = 15
+initres = 100 # resolution of measured points, for square array only
+t_max = 100
 delta_t = 0.001
 border_of_exacticity = 2 # threshold value, to avoid time consuming computation of "impossible" values. Set to 2 for acceptable results, little bit higher saves time but destroys exacticity.
 
@@ -131,6 +131,7 @@ class Task:
 		self.breakvalue = -1
 
 	def do_task(self):
+		print("Run",self.i,"times",self.j, "stand", fliptime(t_max, self.x, self.y, 0, 0, False, False))
 		return (self.i, self.j,fliptime(t_max, self.x, self.y, 0, 0, False, False))
 	
 def work(task):
@@ -146,6 +147,7 @@ if __name__ == '__main__':
 		# fractal_row = [] #initialisation of all rows of the fractal map, means looping over t_2 values, one value per row.
 		# breakvalue = t_max # it is better to leave this on max, to avoid errors if calculation breaks
 		for j in range(len(t_2_init)): #initialisation of the row's value loop, loop over t_1 values with const t_2
+			
 			tasks.append(Task(t_1_init[i],t_2_init[j], i, j))
 			#breakvalue = fliptime(t_max, t_1_init[j], t_2_init[i], j, i, verbose, valueprint)
 			#fractal[i, j] = breakvalue # fractal_row.append(breakvalue) # appending breakvalue to row 
