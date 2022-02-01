@@ -54,26 +54,34 @@ def simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_
 	c_3 = - l_1/l_2
 	c_4 = - g/l_2
 
+	t_stop = n
+
 	# do the integration
 	if verbose: print("Start time integration")
 	if simulation_mode == 0: # Forward Euler
 		for i in range(1, n):
 			dt = p[0, i-1] - p[1, i-1]
 			p[4, i] = c_1 * (p[5, i-1] * np.cos(dt) + p[3, i-1]**2*np.sin(dt)) + c_2 * np.sin(p[0,i-1])
-			p[5, i] = c_1 * (p[4, i-1] * np.cos(dt) + p[2, i-1]**2*np.sin(dt)) + c_2 * np.sin(p[1,i-1])
+			p[5, i] = c_3 * (p[4, i-1] * np.cos(dt) + p[2, i-1]**2*np.sin(dt)) + c_4 * np.sin(p[1,i-1])
 			p[2, i] = p[2, i-1] + delta_t * p[4, i]
 			p[3, i] = p[3, i-1] + delta_t * p[5, i]
 			p[0, i] = p[0, i-1] + delta_t * p[2, i]
 			p[1, i] = p[1, i-1] + delta_t * p[3, i]
+			if not np.isfinite(p[:,i]).all():
+				t_stop = i - 1
+				break
 	elif simulation_mode == 1: # RK4
 		for i in range(1, n):
 			tempP = delta_t * phi(p[0:4, i-1] , delta_t, G, c_1, c_2, c_3, c_4)
 			p[0:4, i] = p[0:4, i-1] + tempP
+			if not np.isfinite(p[:,i]).all():
+				t_stop = i - 1
+				break
 
 	if verbose:
 		print("Time integration done.")
 		print("Saving...")
-	saveDataToFile(filename, t, p[0], p[1], p[2], p[3], m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
+	saveDataToFile(filename, t[:t_stop], p[0, :t_stop], p[1, :t_stop], p[2, :t_stop], p[3, :t_stop], m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 	if verbose: print("Saving done!")
 
 """
