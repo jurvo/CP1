@@ -24,7 +24,7 @@ def G(u, c_1, c_2, c_3, c_4):
 	a2 = a1 * gamma + delta
 	return np.array([v1, v2, a1, a2])
 
-def simulate(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, simulation_mode, verbose, filename):
+def simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, simulation_mode, verbose, filename):
 	if verbose:
 		print("Double Pendulum simulation:")
 		print("m1:", m_1, "| m2:", m_2)
@@ -76,6 +76,7 @@ def simulate(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, 
 	saveDataToFile(filename, t, p[0], p[1], p[2], p[3], m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
 	if verbose: print("Saving done!")
 
+"""
 ### >>> BEGIN SETUP <<<
 # masses
 m_1, m_2 = 1., 1.
@@ -101,4 +102,5 @@ simulation_mode = 1
 filename = "default.txt"
 ### >>> END SETUP <<<
 
-simulate(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, simulation_mode, verbose, filename)
+simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, simulation_mode, verbose, filename)
+"""
