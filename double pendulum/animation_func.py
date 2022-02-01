@@ -6,13 +6,14 @@ import functions
 
 plt.style.use('seaborn-pastel')
 
-def animateDoublePendulum(file, fps, animate = True):
+def animateDoublePendulum(file, fps, animate = True, verbose = False, save = False):
 	# load data and assign them
+	if verbose: print("Load data from file", file)
 	settings, data = functions.loadDataFromFile(file)
 	m1, m2, l1, l2, g, t_max, dt, sim_mode = settings["m1"], settings["m2"], settings["l1"], settings["l2"], settings["g"], settings["tmax"], settings["dt"], settings["sim"]
 	t, q1, q2, p1, p2 = data["t"], data["q1"], data["q2"], data["p1"], data["p2"]
 	n = len(t)
-
+	if verbose: print("Loading complete.\nStarting calculation.")
 	# calculating the x, y, e_kin, e_pot, e_tot values
 	x1 = l1*np.sin(q1)
 	x2 = x1 + l2*np.sin(q2)
@@ -21,7 +22,7 @@ def animateDoublePendulum(file, fps, animate = True):
 	E_kin = .5*m1*l1**2*p1**2 + .5*m2*(l1**2*p1**2 + l2**2*p2**2 + 2*p1*p2*l1*l2*np.cos(q1 - q2))
 	E_pot = -g*(m1*l1*np.cos(q1) + m2*(l1*np.cos(q1) + l2*np.cos(q2)))
 	E_tot = E_kin + E_pot
-
+	if verbose: print("Calculation complete.\nStart plotting.")
 	if animate:
 		# plot the pendulum
 		fig = plt.figure(figsize=(8,8))
@@ -95,9 +96,12 @@ def animateDoublePendulum(file, fps, animate = True):
 			return line, E_tot_graph, E_kin_graph, E_pot_graph, point1, point2, time_text
 		
 		anim = FuncAnimation(fig, animate, frames=np.arange(0, n, max(int(1/fps/dt),1)), interval=1000/fps, blit = True)
-		#anim.save('sine_wave.gif', writer='imagemagick')
-		#anim.save("Pendulum_swing.mp4", fps=int(1/delta_t))
-		plt.show()
+		if save:
+			if verbose: print("Video saving...")
+			anim.save(file + ".mp4", fps=fps)
+			if verbose: print("Video saving done.")
+		else:
+			plt.show()
 	else:
 		# plot the energies
 		fig = plt.figure()
@@ -109,7 +113,6 @@ def animateDoublePendulum(file, fps, animate = True):
 		plt.ylim([-50,200])
 		plt.legend()
 		plt.show()
-	return
 """
 ### >>> BEGIN SETUP <<<
 file = "default.txt"
