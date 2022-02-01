@@ -60,9 +60,14 @@ def simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_
 	if verbose: print("Start time integration")
 	if simulation_mode == 0: # Forward Euler
 		for i in range(1, n):
+			#			0		1	2	3	4	5
+			# p[:,i] = [q1[i], q2, p1, p2, a1, a2]
 			dt = p[0, i-1] - p[1, i-1]
-			p[4, i] = c_1 * (p[5, i-1] * np.cos(dt) + p[3, i-1]**2*np.sin(dt)) + c_2 * np.sin(p[0,i-1])
-			p[5, i] = c_3 * (p[4, i-1] * np.cos(dt) + p[2, i-1]**2*np.sin(dt)) + c_4 * np.sin(p[1,i-1])
+			# a_1 = c_1 * (a_2 * cos(dt) + v_2**2 * sin(dt)) + c_2 * sin(t_1)
+			p[4, i] = c_1 * (p[5, i-1] * np.cos(dt) + p[3, i-1]*p[3, i-1]*np.sin(dt)) + c_2 * np.sin(p[0,i-1])
+			# a_2 = c_3 * (a_1 * cos(dt) + v_1**2 * sin(dt)) + c_4 * sin(t_2)
+			p[5, i] = c_3 * (p[4, i-1] * np.cos(dt) - p[2, i-1]*p[2, i-1]*np.sin(dt)) + c_4 * np.sin(p[1,i-1])
+
 			p[2, i] = p[2, i-1] + delta_t * p[4, i]
 			p[3, i] = p[3, i-1] + delta_t * p[5, i]
 			p[0, i] = p[0, i-1] + delta_t * p[2, i]
