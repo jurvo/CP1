@@ -18,7 +18,7 @@ t_1_0, t_2_0 = np.pi/3., -np.pi/18.
 v_1_0, v_2_0 = 0.0, 0.0
 
 # time setup in seconds
-delta_t = 0.001
+delta_t = [1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
 t_max = 100
 
 # verbose mode
@@ -26,10 +26,11 @@ verbose = True
 
 # 0 = Forward Euler, 1 = RK4
 simulation_mode = 1
-filename = "ref.txt"
-animate = True
-saveToMovie = False
+filename = 'RK%.3f.txt'
 ### >>> END SETUP <<<
 
-sf.simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, delta_t, simulation_mode, verbose, filename)
-af.animateDoublePendulum(filename, 30, animate, verbose, saveToMovie)
+for dt in delta_t:
+	sf.simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_max, dt, simulation_mode, verbose, filename % dt)
+
+
+#af.animateDoublePendulum(filename, 30, animate, verbose, saveToMovie)

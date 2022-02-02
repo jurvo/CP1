@@ -16,10 +16,10 @@ def G(u, args):
 	# init
 	q1, q2 = u[0], u[1]
 	p1, p2 = u[2], u[3]
-	dt = q1-q2
+	dq = q1-q2
 	c_1, c_2, c_3, c_4 = args[0], args[1], args[2], args[3]
-	alpha, beta = c_1 * np.cos(dt), c_1 * p2**2*np.sin(dt) + c_2*np.sin(q1)
-	gamma, delta = c_3 * np.cos(dt), - c_3 * p1**2*np.sin(dt) + c_4*np.sin(q2)
+	alpha, beta = c_1 * np.cos(dq), c_1 * p2**2*np.sin(dq) + c_2*np.sin(q1)
+	gamma, delta = c_3 * np.cos(dq), - c_3 * p1**2*np.sin(dq) + c_4*np.sin(q2)
 	# calculating G1 and G2
 	G1 = (alpha*delta + beta) / (1 - alpha * gamma)
 	G2 = G1 * gamma + delta
@@ -65,11 +65,11 @@ def simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_
 	if simulation_mode == 0: # Forward Euler
 		for i in range(1, n):
 			# p[:,i] = [q1[i], q2[i], p1[i], p2[i], a1[i], a2[i]]
-			dt = p[0, i-1] - p[1, i-1]
+			dq = p[0, i-1] - p[1, i-1]
 			# a_1 = c_1 * (a_2 * cos(dt) + v_2**2 * sin(dt)) + c_2 * sin(t_1)
-			p[4, i] = c_1 * (p[5, i-1] * np.cos(dt) + p[3, i-1]*p[3, i-1]*np.sin(dt)) + c_2 * np.sin(p[0,i-1])
+			p[4, i] = c_1 * (p[5, i-1] * np.cos(dq) + p[3, i-1]*p[3, i-1]*np.sin(dq)) + c_2 * np.sin(p[0,i-1])
 			# a_2 = c_3 * (a_1 * cos(dt) + v_1**2 * sin(dt)) + c_4 * sin(t_2)
-			p[5, i] = c_3 * (p[4, i-1] * np.cos(dt) - p[2, i-1]*p[2, i-1]*np.sin(dt)) + c_4 * np.sin(p[1,i-1])
+			p[5, i] = c_3 * (p[4, i-1] * np.cos(dq) - p[2, i-1]*p[2, i-1]*np.sin(dq)) + c_4 * np.sin(p[1,i-1])
 			# p1[i] = p1[i-1] + dt * a_1
 			p[2, i] = p[2, i-1] + delta_t * p[4, i]
 			# p2[i] = p2[i-1] + dt * a_2
