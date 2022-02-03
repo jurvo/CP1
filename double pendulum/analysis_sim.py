@@ -25,8 +25,8 @@ t_max = 100
 verbose = True
 
 # 0 = Forward Euler, 1 = RK4
-simulation_mode = 1
-filename = 'RK%.3f.txt'
+simulation_mode = 2
+filename = 'FEF%.3f.txt'
 ### >>> END SETUP <<<
 
 for dt in delta_t:

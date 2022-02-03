@@ -8,9 +8,9 @@ plt.style.use('seaborn-pastel')
 
 filesFE = ["FE0.001.txt","FE0.005.txt","FE0.010.txt","FE0.050.txt","FE0.100.txt","FE0.500.txt", "FE1.000.txt","ref.txt"]
 filesRK = ["RK0.001.txt","RK0.005.txt","RK0.010.txt","RK0.050.txt","RK0.100.txt","RK0.500.txt","RK1.000.txt", "ref.txt"]
+filesFEF = ["FEF0.001.txt","FEF0.005.txt","FEF0.010.txt","FEF0.050.txt","FEF0.100.txt","FEF0.500.txt", "FEF1.000.txt","ref.txt"]
 
-
-files = filesFE
+files = filesFEF
 
 ta = []
 E_tota = []
@@ -43,6 +43,6 @@ for i in range(len(E_tota)):
 #	plt.plot(t, E_pot, label="Potentail")
 	plt.plot(ta[i], E_tota[i], label=files[i])
 
-#plt.ylim([-50,200])
+plt.ylim([-50,200])
 plt.legend()
 plt.show()

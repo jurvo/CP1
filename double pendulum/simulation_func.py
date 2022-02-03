@@ -93,6 +93,16 @@ def simulateDoublePendulum(m_1, m_2, l_1, l_2, g, t_1_0, t_2_0, v_1_0, v_2_0, t_
 				if verbose: print("Break due to overflow at index", i, "of", n)
 				t_stop = i - 1
 				break
+	elif simulation_mode == 2: # fixed FE
+		for i in range(1, n):
+			# p[i] = p[i-1] + dt * G()
+			p_prev = p[0:4, i-1]
+			p[0:4, i] = p_prev + delta_t * G(p_prev, args)
+			if verbose and i % modulus == 0: print(i, "of", n, "done.")
+			if not np.isfinite(p[:,i]).all():
+				if verbose: print("Break due to overflow at index", i, "of", n)
+				t_stop = i - 1
+				break
 
 	if verbose: print("Time integration done.\nSaving into", filename)
 	saveDataToFile(filename, t[:t_stop], p[0, :t_stop], p[1, :t_stop], p[2, :t_stop], p[3, :t_stop], m_1, m_2, l_1, l_2, g, t_max, delta_t, simulation_mode)
